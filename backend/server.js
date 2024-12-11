@@ -21,6 +21,6 @@ mongoose.connect(`mongodb+srv://sparkIot:${process.env.MONGODB_PASSWORD}@sparkio
 // Use the routes
 app.use('/', todoRoutes);
 
-// Start server
+// Start server on port 3001 so that the frontend can run on port 3000
 const PORT = 3001;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

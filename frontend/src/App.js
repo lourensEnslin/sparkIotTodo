@@ -9,22 +9,17 @@ const App = () => {
         <Router>
             <div className="App">
                 <Routes>
-                    <Route 
-                        path="/" 
-                        element={
-                            <TodoList 
-                                onEdit={(todo) => window.location.href = `/edit/${todo._id}`}
-                                onAdd={() => window.location.href = '/add'} 
-                            />
-                        } 
+                    <Route
+                        path="/"
+                        element={<TodoList />}
                     />
-                    <Route 
-                        path="/add" 
-                        element={<AddTodo onSuccess={() => window.location.href = '/'} />} 
+                    <Route
+                        path="/add"
+                        element={<AddTodo />}
                     />
-                    <Route 
-                        path="/edit/:id" 
-                        element={<EditTodo onCancel={() => window.location.href = '/'} />} 
+                    <Route
+                        path="/edit/:id"
+                        element={<EditTodo />}
                     />
                 </Routes>
             </div>

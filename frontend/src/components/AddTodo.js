@@ -1,18 +1,36 @@
+// Import necessary dependencies
 import React, { useState } from 'react';
 import axios from '../services/api';
 import { styles as globalStyles } from '../styles/globalStyles';
 import { styles as addStyles } from '../styles/addTodoStyles';
 
-const AddTodo = ({ onSuccess }) => {
+/**
+ * AddTodo Component
+ * Renders a form to add new TODO items
+ * @param {Function} onSuccess - Callback function called after successful TODO creation or cancel
+ */
+const AddTodo = () => {
+    // State for form inputs
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
 
+    // Navigate to the home page after successful addition
+    const onSuccess = () => {window.location.href = '/'};
+
+    /**
+     * Handles form submission
+     * Creates a new TODO item and resets the form
+     * @param {Event} e - Form submission event
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            // Send POST request to create new TODO
             await axios.post('/createTodo', { title, description });
+            // Reset form fields
             setTitle('');
             setDescription('');
+            // Call success callback
             onSuccess();
         } catch (error) {
             console.error('Error adding TODO:', error);
@@ -23,6 +41,7 @@ const AddTodo = ({ onSuccess }) => {
         <div style={globalStyles.container}>
             <h3 style={globalStyles.title}>Add TODO</h3>
             <form onSubmit={handleSubmit} style={addStyles.addForm}>
+                {/* Title input field */}
                 <input
                     type="text"
                     placeholder="Title"
@@ -31,6 +50,7 @@ const AddTodo = ({ onSuccess }) => {
                     required
                     style={globalStyles.input}
                 />
+                {/* Optional description textarea */}
                 <textarea
                     placeholder="Description (optional)"
                     value={description}
@@ -38,6 +58,7 @@ const AddTodo = ({ onSuccess }) => {
                     style={globalStyles.textarea}
                 />
                 <div style={addStyles.buttonContainer}>
+                    {/* Submit button - disabled if title is empty */}
                     <button 
                         type="submit" 
                         disabled={!title}
@@ -45,6 +66,7 @@ const AddTodo = ({ onSuccess }) => {
                     >
                         Add
                     </button>
+                    {/* Cancel button */}
                     <button 
                         type="button" 
                         onClick={onSuccess}

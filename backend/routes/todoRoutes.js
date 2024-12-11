@@ -2,7 +2,13 @@ const express = require('express');
 const router = express.Router();
 const Todo = require('../models/Todo'); // Import the Todo mongo model
 
-// Create a new TODO item
+/**
+ * Create a new TODO item
+ * POST /createTodo
+ * @param {string} title - The title of the todo item (required)
+ * @param {string} description - Optional description of the todo item
+ * @returns {Object} The newly created todo item
+ */
 router.post('/createTodo', async (req, res) => {
     try {
         const { title, description } = req.body;
@@ -16,7 +22,13 @@ router.post('/createTodo', async (req, res) => {
         res.status(500).json({ message: 'Failed to create TODO', error });
     }
 });
-// Get a single TODO item by ID
+
+/**
+ * Get a single TODO item by ID
+ * GET /getTodo/:id
+ * @param {string} id - The ID of the todo item to retrieve
+ * @returns {Object} The requested todo item
+ */
 router.get('/getTodo/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -30,7 +42,11 @@ router.get('/getTodo/:id', async (req, res) => {
     }
 });
 
-// Retrieve all TODO items
+/**
+ * Retrieve all TODO items
+ * GET /getAllTodos
+ * @returns {Array} List of all todo items
+ */
 router.get('/getAllTodos', async (req, res) => {
     try {
         const todos = await Todo.find();
@@ -40,7 +56,15 @@ router.get('/getAllTodos', async (req, res) => {
     }
 });
 
-// Update a TODO item by ID
+/**
+ * Update a TODO item by ID
+ * PUT /updateTodo/:id
+ * @param {string} id - The ID of the todo item to update
+ * @param {string} title - Updated title (optional)
+ * @param {string} description - Updated description (optional)
+ * @param {boolean} completed - Updated completion status (optional)
+ * @returns {Object} The updated todo item
+ */
 router.put('/updateTodo/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -48,7 +72,7 @@ router.put('/updateTodo/:id', async (req, res) => {
         const updatedTodo = await Todo.findByIdAndUpdate(
             id,
             { title, description, completed },
-            { new: true }
+            { new: true }//returns the updated todo
         );
         if (!updatedTodo) {
             return res.status(404).json({ message: 'TODO not found' });
@@ -59,7 +83,12 @@ router.put('/updateTodo/:id', async (req, res) => {
     }
 });
 
-// Delete a TODO item by ID
+/**
+ * Delete a TODO item by ID
+ * DELETE /deleteTodo/:id
+ * @param {string} id - The ID of the todo item to delete
+ * @returns {Object} Success message
+ */
 router.delete('/deleteTodo/:id', async (req, res) => {
     try {
         const { id } = req.params;
