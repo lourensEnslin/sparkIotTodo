@@ -13,6 +13,7 @@ const AddTodo = () => {
     // State for form inputs
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [error, setError] = useState('');
 
     // Navigate to the home page after successful addition
     const onSuccess = () => {window.location.href = '/'};
@@ -24,6 +25,7 @@ const AddTodo = () => {
      */
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(''); // Clear any previous errors
         try {
             // Send POST request to create new TODO
             await axios.post('/createTodo', { title, description });
@@ -34,6 +36,16 @@ const AddTodo = () => {
             onSuccess();
         } catch (error) {
             console.error('Error adding TODO:', error);
+            if (error.response) {
+                // Server responded with an error
+                setError(error.response.data.message || 'Failed to add TODO. Please try again.');
+            } else if (error.request) {
+                // Request was made but no response received
+                setError('Unable to reach the server. Please check your connection.');
+            } else {
+                // Something else went wrong
+                setError('An unexpected error occurred. Please try again.');
+            }
         }
     };
 
@@ -41,6 +53,16 @@ const AddTodo = () => {
         <div style={globalStyles.container}>
             <h3 style={globalStyles.title}>Add TODO</h3>
             <form onSubmit={handleSubmit} style={addStyles.addForm}>
+                {/* Display error message if there is one */}
+                {error && (
+                    <div style={{
+                        color: 'red',
+                        marginBottom: '1rem',
+                        textAlign: 'center'
+                    }}>
+                        {error}
+                    </div>
+                )}
                 {/* Title input field */}
                 <input
                     type="text"

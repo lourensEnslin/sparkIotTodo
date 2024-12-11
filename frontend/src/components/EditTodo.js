@@ -14,6 +14,7 @@ const EditTodo = () => {
     // State for form inputs
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [error, setError] = useState('');
     // Get todo ID from URL parameters
     const { id } = useParams();
 
@@ -31,6 +32,13 @@ const EditTodo = () => {
                 setDescription(todo.description || '');
             } catch (error) {
                 console.error('Error fetching TODO:', error);
+                if (error.response) {
+                    setError(error.response.data.message || 'Failed to fetch TODO details.');
+                } else if (error.request) {
+                    setError('Unable to reach the server. Please check your connection.');
+                } else {
+                    setError('An unexpected error occurred while fetching TODO.');
+                }
             }
         };
         fetchTodo();
@@ -43,6 +51,7 @@ const EditTodo = () => {
      */
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(''); // Clear any previous errors
         try {
             // Send PUT request to update todo
             await axios.put(`/updateTodo/${id}`, { title, description });
@@ -50,6 +59,13 @@ const EditTodo = () => {
             onCancel();
         } catch (error) {
             console.error('Error updating TODO:', error);
+            if (error.response) {
+                setError(error.response.data.message || 'Failed to update TODO. Please try again.');
+            } else if (error.request) {
+                setError('Unable to reach the server. Please check your connection.');
+            } else {
+                setError('An unexpected error occurred while updating TODO.');
+            }
         }
     };
 
@@ -57,6 +73,16 @@ const EditTodo = () => {
         <div style={globalStyles.container}>
             <h3 style={globalStyles.title}>Edit TODO</h3>
             <form onSubmit={handleSubmit} style={editStyles.editForm}>
+                {/* Display error message if there is one */}
+                {error && (
+                    <div style={{
+                        color: 'red',
+                        marginBottom: '1rem',
+                        textAlign: 'center'
+                    }}>
+                        {error}
+                    </div>
+                )}
                 {/* Title input field */}
                 <input
                     type="text"

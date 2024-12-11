@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const todoRoutes = require('./routes/todoRoutes');
-require('dotenv').config();
 
 const app = express();
 
@@ -14,7 +13,7 @@ app.use(bodyParser.json());
 //tinydevicesbiginsights
 
 // MongoDB connection
-mongoose.connect(`mongodb+srv://sparkIot:${process.env.MONGODB_PASSWORD}@sparkiottodo.3ntia.mongodb.net/?retryWrites=true&w=majority&appName=sparkIotTodo`)
+mongoose.connect(`mongodb+srv://sparkIot:tinydevicesbiginsights@sparkiottodo.3ntia.mongodb.net/?retryWrites=true&w=majority&appName=sparkIotTodo`)
     .then(() => console.log('Connected to MongoDB'))
     .catch((err) => console.error('Error connecting to MongoDB:', err));
 

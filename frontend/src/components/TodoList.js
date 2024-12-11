@@ -9,15 +9,24 @@ const TodoList = () => {
     // State for storing todos and refresh status
     const [todos, setTodos] = useState([]);
     const [isRefreshing, setIsRefreshing] = useState(false);
+    const [error, setError] = useState('');
 
     // Fetch all todos from the API
     const fetchTodos = async () => {
         setIsRefreshing(true);
+        setError('');
         try {
             const response = await axios.get('/getAllTodos');
             setTodos(response.data);
         } catch (error) {
             console.error('Error fetching TODOs:', error);
+            if (error.response) {
+                setError(error.response.data.message || 'Failed to fetch TODOs from server.');
+            } else if (error.request) {
+                setError('Unable to reach the server. Please check your connection.');
+            } else {
+                setError('An unexpected error occurred while fetching TODOs.');
+            }
         } finally {
             setIsRefreshing(false);
         }
@@ -30,16 +39,25 @@ const TodoList = () => {
 
     // Handle deletion of a todo
     const handleDelete = async (id) => {
+        setError('');
         try {
             await axios.delete(`/deleteTodo/${id}`);
             setTodos(todos.filter((todo) => todo._id !== id));
         } catch (error) {
             console.error('Error deleting TODO:', error);
+            if (error.response) {
+                setError(error.response.data.message || 'Failed to delete TODO.');
+            } else if (error.request) {
+                setError('Unable to reach the server. Please check your connection.');
+            } else {
+                setError('An unexpected error occurred while deleting TODO.');
+            }
         }
     };
 
     // Toggle completion status of a todo
     const handleComplete = async (id, completed) => {
+        setError('');
         try {
             await axios.put(`/updateTodo/${id}`, { completed: !completed });
             setTodos(todos.map(todo => 
@@ -47,6 +65,13 @@ const TodoList = () => {
             ));
         } catch (error) {
             console.error('Error updating TODO:', error);
+            if (error.response) {
+                setError(error.response.data.message || 'Failed to update TODO status.');
+            } else if (error.request) {
+                setError('Unable to reach the server. Please check your connection.');
+            } else {
+                setError('An unexpected error occurred while updating TODO.');
+            }
         }
     };
 
@@ -63,6 +88,16 @@ const TodoList = () => {
     return (
         <div style={globalStyles.container}>
             <h3 style={{...globalStyles.text, ...globalStyles.title}}>TODO List</h3>
+            {/* Display error message if there is one */}
+            {error && (
+                <div style={{
+                    color: 'red',
+                    marginBottom: '1rem',
+                    textAlign: 'center'
+                }}>
+                    {error}
+                </div>
+            )}
             {/* Refresh button */}
             <button 
                 style={{...globalStyles.button, ...todoStyles.refreshButton}} 
