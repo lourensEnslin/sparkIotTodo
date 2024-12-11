@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AddTodo from './components/AddTodo';
 import TodoList from './components/TodoList';
 import EditTodo from './components/EditTodo';
+import './App.css';
 
 const App = () => {
     return (

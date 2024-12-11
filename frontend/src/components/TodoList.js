@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from '../services/api';
 import { styles as globalStyles } from '../styles/globalStyles';
 import { styles as todoStyles } from '../styles/todoListStyles';
+import LoadingPlaceholder from './LoadingPlaceholder';
 
 // Main TodoList component
 const TodoList = () => {
@@ -110,8 +111,10 @@ const TodoList = () => {
             <button style={{...globalStyles.button, ...todoStyles.addButton}} onClick={() => window.location.href = '/add'}>
                 Add New Todo
             </button>
-            {/* Display empty message or todo list */}
-            {todos.length === 0 ? (
+            {/* Display loading placeholders, empty message, or todo list */}
+            {isRefreshing ? (
+                <LoadingPlaceholder />
+            ) : todos.length === 0 ? (
                 <p style={todoStyles.emptyMessage}>No todos yet. Click "Add New Todo" to create one!</p>
             ) : (
                 <ul style={todoStyles.todoList}>
